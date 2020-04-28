@@ -44,10 +44,13 @@ class App extends React.Component {
       isLoading: true
     })
     let page = searchTerm === this.state.searchTerm ? this.state.page : 1;
+    let size = 20;
+    let total = size*page;
 
     //query api
     trackPromise(
-      fetch(`https://api.elderscrollslegends.io/v1/cards?page=${ page }&pageSize=20&name=${ searchTerm }`)
+      //couldn't figure out a more elegant way to append results to the cardsData object so updating pageSize to get more results every time
+      fetch(`https://api.elderscrollslegends.io/v1/cards?page=1&pageSize=${total}&name=${ searchTerm }`)
         .then( response => response.json() )
         .then((data) => {
           this.setState({
@@ -76,7 +79,7 @@ class App extends React.Component {
       setTimeout(function() {
         this.loadMore();
         this.setState({render: true, isLoading: true})
-      }.bind(this),2000);
+      }.bind(this),1000);
     }
   };
 
@@ -97,17 +100,17 @@ class App extends React.Component {
           </div>
 
         <ul className="cards row">
-          {this.state.cardsData.map( ( card, key ) => {
+          {this.state.cardsData.map( ( card ) => {
             return <li card={card.id} key={card.id} className="col-lg-3 col-md-6">
-              <div className="card-image">
+                <div className="card-image">
                 <img src={card.imageUrl} alt={card.name + " -- " + card.type} title={card.name + " -- " + card.type} />
-              </div>
-              <div className="card-info">
+                </div>
+                <div className="card-info">
                 <h3>{card.name}</h3>
                 <p>&lt;{card.type}&gt;</p>
                 <p className="text">{card.text}</p>
-                <p>{card.set.id}</p>
-              </div>
+                <p className="set-name">{card.set.id}</p>
+                </div>
             </li>;
           })}
         </ul>

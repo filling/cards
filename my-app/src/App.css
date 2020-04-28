@@ -58,3 +58,14 @@
 .cards li .card-info .text {
   font-style:italic;
 }
+
+.cards li .card-info .set-name {
+  position: absolute;
+  background: #666;
+  color: white;
+  transform: rotate(50deg);
+  text-align: center;
+  top: 17px;
+  right: -4px;
+  width: 60px;
+}
