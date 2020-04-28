@@ -39,28 +39,25 @@ class App extends React.Component {
   }
 
   //function to get cards
-  cardFetch ( searchTerm = '' ) {
+  cardFetch ( keyword = '' ) {
     this.setState({
       isLoading: true
     })
-    let page = searchTerm === this.state.searchTerm ? this.state.page : 1;
-    let size = 20;
-    let total = size*page;
+    let page = keyword === this.state.searchTerm ? this.state.page : 1;
 
     //query api
     trackPromise(
-      //couldn't figure out a more elegant way to append results to the cardsData object so updating pageSize to get more results every time
-      fetch(`https://api.elderscrollslegends.io/v1/cards?page=1&pageSize=${total}&name=${ searchTerm }`)
+      fetch(`https://api.elderscrollslegends.io/v1/cards?page=${page}&pageSize=20&name=${ keyword }`)
         .then( response => response.json() )
         .then((data) => {
           this.setState({
-            cardsData: data.cards,
-            searchTerm: searchTerm,
+            cardData: keyword === this.state.searchTerm ? [...this.state.cardData, ...data.cards] : data.cards,
+            searchTerm: keyword,
             page: page,
             cardCount: data._totalCount,
             isLoading: false
           });
-      })
+        })
     )
   }
 
@@ -85,7 +82,7 @@ class App extends React.Component {
 
   render() {
     let renderedComponent;
-    if ( this.state.cardsData ) {
+    if ( this.state.cardData ) {
       renderedComponent = <div className="card-container">
           <div className="form">
             <label htmlFor="cardSearch">Search for card(s):&nbsp;</label>
@@ -100,7 +97,7 @@ class App extends React.Component {
           </div>
 
         <ul className="cards row">
-          {this.state.cardsData.map( ( card ) => {
+          {this.state.cardData.map( ( card ) => {
             return <li card={card.id} key={card.id} className="col-lg-3 col-md-6">
                 <div className="card-image">
                 <img src={card.imageUrl} alt={card.name + " -- " + card.type} title={card.name + " -- " + card.type} />
