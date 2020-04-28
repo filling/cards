@@ -13,8 +13,6 @@ class App extends React.Component {
       cardData: [],
       searchTerm: '',
       page: 1,
-      cardCount: 0,
-      render: false
     };
   }
 
@@ -29,6 +27,20 @@ class App extends React.Component {
     //get cards on page load
     this.cardFetch();
   }
+
+  //function for detecting when reaching the bottom of page
+  handleScroll = () => { 
+    var lastCard = document.querySelector( 'ul.cards > li:last-child' );
+    var lastCardOffset = lastCard ? lastCard.offsetTop + lastCard.clientHeight : 0;
+    var pageOffset = window.pageYOffset + window.innerHeight;
+    if ( pageOffset > lastCardOffset ) {
+      //delay loadMore() function
+      setTimeout(function() {
+        this.loadMore();
+        this.setState({isLoading: true})
+      }.bind(this),1000);
+    }
+  };
 
   //function for updating properties when loading more results
   loadMore () {
@@ -54,7 +66,6 @@ class App extends React.Component {
             cardData: keyword === this.state.searchTerm ? [...this.state.cardData, ...data.cards] : data.cards,
             searchTerm: keyword,
             page: page,
-            cardCount: data._totalCount,
             isLoading: false
           });
         })
@@ -65,20 +76,6 @@ class App extends React.Component {
   updateSearchTerm ( e ) {
     this.cardFetch( e.target.value );
   }
-
-  //function for detecting when reaching the bottom of page
-  handleScroll = () => { 
-    var lastCard = document.querySelector( 'ul.cards > li:last-child' );
-    var lastCardOffset = lastCard ? lastCard.offsetTop + lastCard.clientHeight : 0;
-    var pageOffset = window.pageYOffset + window.innerHeight;
-    if ( pageOffset > lastCardOffset ) {
-      //delay loadMore() function
-      setTimeout(function() {
-        this.loadMore();
-        this.setState({render: true, isLoading: true})
-      }.bind(this),1000);
-    }
-  };
 
   render() {
     let renderedComponent;
