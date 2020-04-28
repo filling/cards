@@ -28,11 +28,33 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.card-container {
+  margin: 40px 20px;
+}
+
+.cards {
+  list-style-type: none;
+  margin: 20px 0 0;
+  padding: 0;
+}
+
+.cards li {
+  border: solid 1px #aaa;
+  border-radius: 5px;
+}
+
+.cards li div img {
+  width: 90%;
+}
+
+.cards li .card-info {
+  text-align: center;
+}
+
+.cards li .card-info h3 {
+  margin-bottom: 0;
+}
+
+.cards li .card-info .text {
+  font-style:italic;
 }
